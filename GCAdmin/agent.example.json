@@ -1,0 +1,16 @@
+{
+  "name": "Grand Chase • Season 2",
+  "bind": "127.0.0.1",
+  "port": 18740,
+  "server_root": "C:\\GrandChaseS2\\02_Codigo_Servidor",
+  "backup_dir": "C:\\GCAdmin-Backups",
+  "databases": ["gc", "Stat", "msg", "Web"],
+  "start_delay_seconds": 3,
+  "stop_timeout_seconds": 120,
+  "sql": {
+    "server": "localhost",
+    "driver": "ODBC Driver 18 for SQL Server",
+    "windows_auth": true,
+    "trust_certificate": true
+  }
+}
