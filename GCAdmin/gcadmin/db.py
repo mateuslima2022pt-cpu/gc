@@ -90,7 +90,7 @@ class Database:
         with self.session() as con:
             login = self.login_for(con, account_id)
             chars = self.rows(con.cursor().execute(
-                'SELECT CharType AS type, CharName AS name, Promotion AS promotion, '
+                'SELECT CharType AS type, CAST(NULL AS nvarchar(20)) AS name, Promotion AS promotion, '
                 'Level AS level, Exp AS xp, Win AS wins, Lose AS losses '
                 'FROM dbo.Characters WHERE Login=? ORDER BY CharType', login))
             for c in chars:

@@ -1,9 +1,9 @@
-# Validação da entrega 0.1.0
+# Validação da entrega 0.1.1
 
 ## Executado neste ambiente
 
 - Ambiente: Linux, Python 3.12, Node.js e Chromium headless.
-- **22 testes automatizados passaram**, executados com `python -m unittest discover -s tests -v`.
+- **23 testes automatizados passaram**, executados com `python -m unittest discover -s tests -v`.
 - Sintaxe Python de todos os módulos e JSON do exemplo validados.
 - JavaScript validado com `node --check web/app.js`.
 - Teste de navegador com Playwright/Chromium passou, sem erros de JavaScript.
@@ -55,3 +55,5 @@ Os testes locais não afirmam compatibilidade de produção com uma VPS ainda n�
 7. Criar backup SQL numa pasta com permissões adequadas e realizar um restauro de teste separado.
 
 As funções pendentes têm botões desativados e nenhum endpoint de escrita. Não se deve habilitá-las só removendo o atributo `disabled` da interface.
+
+Atualização 0.1.1: teste de regressão para abertura de conta sem Characters.CharName, executando a consulta real num esquema de teste sem essa coluna. Validação em SQL Server real continua pendente.

@@ -1,4 +1,5 @@
 import json
+import sqlite3
 import tempfile
 import threading
 import time
@@ -195,6 +196,53 @@ class ClientTests(unittest.TestCase):
 
 
 class DatabaseTests(unittest.TestCase):
+    def test_account_detail_on_season2_schema_without_charname(self):
+        # Execute the real projection against a schema with the known Season 2 columns.
+        # Only TOP syntax and pyodbc's parameter calling convention are adapted to SQLite.
+        raw = sqlite3.connect(':memory:')
+        raw.execute("ATTACH DATABASE ':memory:' AS dbo")
+        raw.executescript('''
+            CREATE TABLE dbo.users (LoginUID INT, Login TEXT, Connecting INT);
+            CREATE TABLE dbo.Characters (
+                Login TEXT, CharType INT, Promotion INT, Level INT, Exp INT, Win INT, Lose INT
+            );
+            CREATE TABLE dbo.DurationItemObjectList (
+                DurationItemUID INT, OwnerLogin TEXT, GoodsID INT, Duration INT
+            );
+            CREATE TABLE dbo.GoodsInfoList (GoodsID INT, GoodsName TEXT);
+            INSERT INTO dbo.users VALUES (84267, 'ikki2', 0);
+            INSERT INTO dbo.Characters VALUES ('ikki2', 0, 0, 1, 2020, 0, 0);
+            INSERT INTO dbo.Characters VALUES ('ikki2', 1, 0, 1, 2020, 0, 0);
+            INSERT INTO dbo.Characters VALUES ('ikki2', 2, 0, 1, 2020, 0, 0);
+            INSERT INTO dbo.Characters VALUES ('other', 7, 0, 10, 9000, 0, 0);
+            INSERT INTO dbo.DurationItemObjectList VALUES (10, 'ikki2', 74990, 1);
+            INSERT INTO dbo.DurationItemObjectList VALUES (11, 'other', 74990, 9);
+            INSERT INTO dbo.GoodsInfoList VALUES (74990, 'Teste do Ronan');
+        ''')
+
+        class Cursor:
+            def __init__(self): self.cursor = raw.cursor()
+            def execute(self, sql, *params):
+                if 'TOP (150)' in sql:
+                    sql = sql.replace('TOP (150)', '') + ' LIMIT 150'
+                self.cursor.execute(sql, params)
+                return self
+            def __getattr__(self, name): return getattr(self.cursor, name)
+
+        class Connection:
+            def cursor(self): return Cursor()
+            def close(self): raw.close()
+            def rollback(self): raw.rollback()
+
+        db = Database({})
+        with patch.object(db, 'connect', return_value=Connection()):
+            detail = db.detail(84267)
+        self.assertEqual(detail['login'], 'ikki2')
+        self.assertEqual([c['character'] for c in detail['characters']], ['Elesis', 'Lire', 'Arme'])
+        self.assertTrue(all(c['name'] is None for c in detail['characters']))
+        self.assertEqual(len(detail['inventory']), 1)
+        self.assertEqual(detail['inventory'][0]['quantity'], 1)
+
     def test_sql_rolls_back_and_closes_on_fault(self):
         class Fake:
             rolled = closed = False

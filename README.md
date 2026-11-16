@@ -4,7 +4,7 @@ Primeira versão do aplicativo de administração para Windows, com cliente desk
 
 ## Download
 
-**[Baixar GCAdmin-v0.1.0.zip](https://github.com/mateuslima2022pt-cpu/gc/raw/refs/heads/main/downloads/GCAdmin-v0.1.0.zip)**
+**[Baixar GCAdmin-v0.1.1.zip](https://github.com/mateuslima2022pt-cpu/gc/raw/refs/heads/main/downloads/GCAdmin-v0.1.1.zip)**
 
 1. Baixe e extraia o ZIP para `C:\GCAdmin`.
 2. Instale **Python 3.12 x64**, incluindo o Python Launcher.
@@ -23,7 +23,7 @@ O ZIP contém **código-fonte e scripts**, não um executável Windows já compi
 - Logs, backups SQL e histórico de ações.
 - Modo demonstração claramente identificado.
 
-A integração real com SQL Server e consolas Windows exige teste na instalação do servidor. **22 testes automatizados e os fluxos de navegador passaram em Linux/Chromium.** GM, banimentos, edição de inventário, armazém e eventos permanecem desativados até validação das integrações.
+A integração real com SQL Server e consolas Windows exige teste na instalação do servidor. **23 testes automatizados passaram em Linux, incluindo regressão para bases sem CharName; os fluxos de navegador foram validados na 0.1.0.** GM, banimentos, edição de inventário, armazém e eventos permanecem desativados até validação das integrações.
 
 ## Documentação
 
@@ -32,3 +32,9 @@ A integração real com SQL Server e consolas Windows exige teste na instalaçã
 - [Referências e decisões](GCAdmin/docs/REFERENCIAS.md)
 
 O agente destina-se a localhost ou VPN privada. Não inclua senhas, bases de dados ou arquivos do servidor de jogo neste repositório.
+
+## Correção 0.1.1
+
+Corrige o erro `Nome de coluna CharName inválido` ao abrir contas. Não é necessário alterar a base de dados. Na instalação existente, fecha o agente e substitui apenas `gcadmin/db.py` pelo ficheiro do novo ZIP; depois inicia o agente novamente.
+
+[Instruções de atualização](GCAdmin/docs/ATUALIZACAO-0.1.1.md)
