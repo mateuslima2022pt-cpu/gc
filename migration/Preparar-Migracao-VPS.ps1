@@ -143,14 +143,16 @@ try {
 
     Write-Host '[1/6] A verificar SQL local e bases...' -ForegroundColor Cyan
     $builder = New-Object Data.SqlClient.SqlConnectionStringBuilder
-    $builder.DataSource = $SqlInstance
-    $builder.InitialCatalog = 'master'
-    $builder.IntegratedSecurity = $true
-    $builder.Encrypt = $true
-    $builder.TrustServerCertificate = $true
-    $builder.ConnectTimeout = 15
-    $builder.ApplicationName = 'GC-PrepararVPS'
-    $script:Connection = New-Object Data.SqlClient.SqlConnection $builder.ConnectionString
+    # Use canonical SQL keywords through the indexer: PowerShell 5.1 adapts this
+    # IDictionary and treats dot assignments like DataSource as dictionary keys.
+    $builder['Data Source'] = $SqlInstance
+    $builder['Initial Catalog'] = 'master'
+    $builder['Integrated Security'] = $true
+    $builder['Encrypt'] = $true
+    $builder['TrustServerCertificate'] = $true
+    $builder['Connect Timeout'] = 15
+    $builder['Application Name'] = 'GC-PrepararVPS'
+    $script:Connection = New-Object Data.SqlClient.SqlConnection ($builder.get_ConnectionString())
     $script:Connection.Open()
     $server = Invoke-SqlTable @'
 SELECT CONVERT(nvarchar(128),SERVERPROPERTY('MachineName')) AS MachineName,

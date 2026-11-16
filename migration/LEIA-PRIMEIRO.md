@@ -57,3 +57,5 @@ Não publiques o pacote em GitHub nem o envies no chat. As configurações podem
 O script é preparado e verificado neste ambiente, mas os backups reais só podem ser executados e confirmados na tua instalação Windows/SQL Server. O primeiro teste é supervisionado: se falhar uma permissão, falta de espaço ou backup, envia apenas o erro, ocultando credenciais.
 
 Backups de uma versão SQL mais recente não podem ser restaurados numa versão anterior. O script regista a versão de origem e avisa se for posterior a 2022; nesse caso, vamos rever a versão instalada na VPS antes de restaurar.
+
+Versão 1.1: corrige a construção da conexão SQL no Windows PowerShell usando as palavras-chave canónicas do SqlConnectionStringBuilder.
